@@ -130,12 +130,14 @@ def readLeadboard():
     except IOError:
         print ("Error: can\'t find file or read data")
 def readtxt():
-    with open("questions_answers.txt","r",encoding="ansi") as f:
-        for line in f:
-            data2=line.split(";")
-            if data2==[]:
-                print("Malakia")
-                exit()
-            qlist.append(data2[0])
-            alist.append(data2[1])
-
+    try:
+        with open("questions_answers.txt","r",encoding="ansi") as f:
+            for line in f:
+                data2=line.split(";")
+                if data2==[]:
+                    print("Malakia")
+                    exit()
+                qlist.append(data2[0])
+                alist.append(data2[1])
+    except IOError:
+        print ("Error: can\'t find file or read data")
