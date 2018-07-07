@@ -1,2 +1,2 @@
 # StupidQuiz
-A stupid quiz in python from a beginner
+A stupid quiz in python 3.6.4 from a beginner
