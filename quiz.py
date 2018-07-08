@@ -4,7 +4,8 @@ import random
 options = "1. Start Quiz","2. LeaderBoard","3. Quit Game"
 def main():
     readLeadboard()
-    readtxt() 
+    readtxt()
+    #main menu
     while True:
         for i in options:
             print(i)
@@ -21,6 +22,7 @@ def main():
             exit()
         else:
             print("Invalid choice")
+#global variables
 plist = []
 qlist = []
 alist = []
@@ -36,7 +38,7 @@ class myThread (threading.Thread):
         self.name = name
 
     def run(self):
-        
+        #Countdown Timer for 1 minute
         t0=time.localtime(time.time()) 
         while True:
             t1=time.localtime(time.time()) 
@@ -46,6 +48,7 @@ class myThread (threading.Thread):
 
 def stquiz(d):
     score=0
+    #initialize threadz
     threadz = myThread("Thread1")
     threadz.start()
     threadz.lock.acquire()
@@ -55,6 +58,7 @@ def stquiz(d):
         print("Question: "+ qlist[rand])
         answer=input("\nWrite your answer: ")
         print("\n")
+        #Checking if answer is correct and 1 minute has not passed
         if str(answer)==alist[rand] and str(threadz.getName())=="Thread1":
             score = score + 10
         elif str(answer)==bonus[0]:
@@ -64,19 +68,25 @@ def stquiz(d):
     threadz.lock.release()
     leadboard[0].append(d)
     leadboard[1].append(score)
-    leaderb("0")
+
     
 def leaderb(x):
     quicksort(leadboard,0,len(leadboard[0])-1)    
     leadboard[0].reverse()
     leadboard[1].reverse()
     saveFile()
+    #printing the top 10 players or less if not 10
     if x=="2":
-        for i in range(0,len(leadboard[0]),1):
+        if len(leadboard)<=10:
+            for i in range(0,len(leadboard[0]),1):
               print(str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
+        else:
+            for i in range(0,10,1):
+                  print(str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
         print("\n")
 
 def quicksort(a,ls,rs):
+    #Simple quicksort for a 2D list
     if ls<rs:
         l=ls
         r=rs
@@ -101,14 +111,15 @@ def quicksort(a,ls,rs):
         quicksort(a,ls,l-1)
         quicksort(a,l+1,rs)
 
-
+#Function for randomizing the questions
 def makis():
     while True:
         a=random.randint(0,len(qlist)-1)
         if plist[a]==False:
             plist[a]=True
             return a    
-            
+
+#Saving into LeaderBoard.txt            
 def saveFile():
     if len(leadboard[0])<=10:
         with open("LeaderBoard.txt","w",encoding="ansi") as f:
@@ -120,6 +131,8 @@ def saveFile():
             for i in range(0,10,1):
                 f.write(str(leadboard[0][i])+"\t")
                 f.write(str(leadboard[1][i])+"\n")
+
+#Reading from LeaderBoard.txt and creating it if it doesn't exist  
 def readLeadboard():
     try:
         with open("LeaderBoard.txt","r",encoding="ansi") as f:
@@ -130,16 +143,17 @@ def readLeadboard():
     except IOError:
         with open("LeaderBoard.txt","w",encoding="ansi") as f:
             print("Creating LeaderBoard.txt")
-            
+
+#Reading from questions_answers.txt             
 def readtxt():
     try:
         with open("questions_answers.txt","r",encoding="ansi") as f:
             for line in f:
                 data2=line.split(";")
                 if data2==[]:
-                    print("Malakia")
+                    print("Error 1")
                     exit()
                 qlist.append(data2[0])
                 alist.append(data2[1])
     except IOError:
-        print ("Error: can\'t find file or read data")
+        print ("Error: can\'t find file questions_answers.txt")
