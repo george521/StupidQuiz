@@ -128,7 +128,9 @@ def readLeadboard():
                 leadboard[0].append(data[0])
                 leadboard[1].append(data[1])
     except IOError:
-        print ("Error: can\'t find file or read data")
+        with open("LeaderBoard.txt","w",encoding="ansi") as f:
+            print("Creating LeaderBoard.txt")
+            
 def readtxt():
     try:
         with open("questions_answers.txt","r",encoding="ansi") as f:

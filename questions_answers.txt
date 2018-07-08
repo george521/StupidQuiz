@@ -7,4 +7,4 @@ What is the capital of the United States?;Washington;
 Which is the tallest mountain in the world?;Everest;
 Which is the largest planet in our solar system?;Jupiter;
 How many sides does a cube have?;6;
-Who is the master of this quiz?;george52;
+Who is the master of this quiz?;george521;
