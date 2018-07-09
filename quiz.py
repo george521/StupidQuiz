@@ -1,7 +1,7 @@
 import threading
 import time
 import random
-options = "1. Start Quiz","2. LeaderBoard","3. Quit Game"
+options = "1. Start Quiz","2. LeaderBoard","3. Import new Question","4. Quit Game"
 def main():
     readLeadboard()
     readtxt()
@@ -19,6 +19,10 @@ def main():
         elif x=="2":
             leaderb(x)
         elif x=="3":
+            qg=input("Give your question:\t")
+            ag=input("Give the answer to the question:\t")
+            ImportQA(qg,ag)
+        elif x=="4":
             exit()
         else:
             print("Invalid choice")
@@ -52,8 +56,8 @@ def stquiz(d):
     threadz = myThread("Thread1")
     threadz.start()
     threadz.lock.acquire()
-    for k in range (0,len(qlist),1):
-        rand=makis()
+    for k in range (0,5,1):
+        rand=Randomizer()
         threadz.name="Thread1"
         print("Question: "+ qlist[rand])
         answer=input("\nWrite your answer: ")
@@ -112,13 +116,25 @@ def quicksort(a,ls,rs):
         quicksort(a,l+1,rs)
 
 #Function for randomizing the questions
-def makis():
+def Randomizer():
     while True:
         a=random.randint(0,len(qlist)-1)
         if plist[a]==False:
             plist[a]=True
             return a    
 
+#Function for importing new questions
+def ImportQA(question,answer):
+    qlist.append(question)
+    alist.append(answer)
+    try:
+        with open("questions_answers.txt","w",encoding="ansi") as f:
+            for i in range(0,len(qlist),1):
+                f.write(str(qlist[i])+";"+str(alist[i])+";\n")
+    except IOError:
+        print ("Error: can\'t find file questions_answers.txt")
+
+    
 #Saving into LeaderBoard.txt            
 def saveFile():
     if len(leadboard[0])<=10:

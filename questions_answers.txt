@@ -1,7 +1,7 @@
 How many legs does a dog have?;4;
 What is the value of x in this equation x+4*(6/2)/3+5=9?;0;
 Who is the king of the Greek Gods?;Zeus;
-Which is the most common word in Greece?;ti;
+Which is the most common word in Greece?;Ti;
 Who was Jesus father?;God;
 What is the capital of the United States?;Washington;
 Which is the tallest mountain in the world?;Everest;
