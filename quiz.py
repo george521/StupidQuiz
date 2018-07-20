@@ -1,10 +1,11 @@
 import threading
 import time
 import random
+import tkinter as tk
+from tkinter import *
 options = "1. Start Quiz","2. LeaderBoard","3. Import new Question","4. Quit Game"
+
 def main():
-    readLeadboard()
-    readtxt()
     #main menu
     while True:
         for i in options:
@@ -17,7 +18,7 @@ def main():
             d=input("Name: ")
             stquiz(d)
         elif x=="2":
-            leaderb(x)
+            leaderb()
         elif x=="3":
             qg=input("Give your question:\t")
             ag=input("Give the answer to the question:\t")
@@ -74,20 +75,19 @@ def stquiz(d):
     leadboard[1].append(score)
 
     
-def leaderb(x):
+def leaderb():
     quicksort(leadboard,0,len(leadboard[0])-1)    
     leadboard[0].reverse()
     leadboard[1].reverse()
     saveFile()
     #printing the top 10 players or less if not 10
-    if x=="2":
-        if len(leadboard)<=10:
-            for i in range(0,len(leadboard[0]),1):
-              print(str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
-        else:
-            for i in range(0,10,1):
-                  print(str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
-        print("\n")
+    if len(leadboard)<=10:
+        for i in range(0,len(leadboard[0]),1):
+            print(str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
+    else:
+        for i in range(0,10,1):
+            print(str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
+    print("\n")
 
 def quicksort(a,ls,rs):
     #Simple quicksort for a 2D list
@@ -173,3 +173,53 @@ def readtxt():
                 alist.append(data2[1])
     except IOError:
         print ("Error: can\'t find file questions_answers.txt")
+
+
+class MainPage:
+    def __init__(self,master):
+        self.master = master
+        self.master.title("Main Menu")
+        self.frame =tk.Frame(self.master)
+        self.button1 = tk.Button(self.frame,text="Start Game",width = 30, command = self.new_window)
+        self.button1.pack()
+        self.button2 = tk.Button(self.frame,text="Leaderboard",width = 30, command = self.new_window2)
+        self.button2.pack()
+        self.button3 = tk.Button(self.frame,text="New Question",width = 30, command = self.new_window)
+        self.button3.pack()
+        self.button4 = tk.Button(self.frame,text="Quit Game",width = 30, command = lambda:self.master.destroy() )
+        self.button4.pack()
+        self.frame.pack()
+
+    def new_window(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = StartGame(self.newWindow)
+
+    def new_window2(self):
+        self.newWindow2 = tk.Toplevel(self.master)
+        self.app = LeaderBoard(self.newWindow2)
+
+class StartGame:
+    def __init__(self,master):
+        self.master = master
+        self.master.title("Start Game")
+        self.frame = tk.Frame(self.master)
+        self.mbutton = tk.Button(self.frame,text = "Not implemented yet", width =30 , command = lambda:self.master.destroy() )
+        self.mbutton.pack()
+        self.frame.pack()
+
+class LeaderBoard:
+    def __init__(self,master):
+        self.master = master
+        self.master.title("Leaderboard")
+        self.frame = tk.Frame(self.master)
+        for i in range(0,len(leadboard[0]),1):
+            tk.Label(self.master,text=leadboard[0][i]+"\t"+leadboard[1][i]).pack()
+        self.qbutton = tk.Button(self.frame,text = "Back", width =30 , command = lambda:self.master.destroy() ).pack()
+        self.frame.pack()
+
+readLeadboard()
+readtxt()
+    
+root =tk.Tk()
+app=MainPage(root)
+root.mainloop()
