@@ -1,12 +1,13 @@
 import threading
 import time
 import random
-import tkinter as tk
-from tkinter import *
+
 options = "1. Start Quiz","2. LeaderBoard","3. Import new Question","4. Quit Game"
 
 def main():
     #main menu
+    readtxt()
+    readLeadboard()
     while True:
         for i in options:
             print(i)
@@ -36,41 +37,22 @@ names=[]
 points=[]
 bonus=["Panflo"]
 
-class myThread (threading.Thread):
-    def __init__(self, name):
-        threading.Thread.__init__(self)
-        self.lock = threading.Lock()
-        self.name = name
-
-    def run(self):
-        #Countdown Timer for 1 minute
-        t0=time.localtime(time.time()) 
-        while True:
-            t1=time.localtime(time.time()) 
-            if t0.tm_min!=t1.tm_min and t0.tm_sec==t1.tm_sec:
-                break
-        self.name="thread2"
-
 def stquiz(d):
     score=0
-    #initialize threadz
-    threadz = myThread("Thread1")
-    threadz.start()
-    threadz.lock.acquire()
     for k in range (0,5,1):
+        t0=time.time()
         rand=Randomizer()
-        threadz.name="Thread1"
         print("Question: "+ qlist[rand])
         answer=input("\nWrite your answer: ")
         print("\n")
+        t1=time.time()
         #Checking if answer is correct and 1 minute has not passed
-        if str(answer)==alist[rand] and str(threadz.getName())=="Thread1":
+        if str(answer)==alist[rand] and t1-t0<60.0:
             score = score + 10
         elif str(answer)==bonus[0]:
             score = score + 10000
         else:
             continue
-    threadz.lock.release()
     leadboard[0].append(d)
     leadboard[1].append(score)
     quicksort(leadboard,0,len(leadboard[0])-1)    
@@ -168,92 +150,3 @@ def readtxt():
     except IOError:
         print ("Error: can\'t find file questions_answers.txt")
 
-
-class MainPage:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("Main Menu")
-        self.frame =tk.Frame(self.master)
-        self.button1 = tk.Button(self.frame,text="Start Game",width = 30, command = self.StartGame_window)
-        self.button1.pack()
-        self.button2 = tk.Button(self.frame,text="Leaderboard",width = 30, command = self.LeaderBoard_window)
-        self.button2.pack()
-        self.button3 = tk.Button(self.frame,text="New Question",width = 30, command = self.ImportQuestion_window)
-        self.button3.pack()
-        self.button4 = tk.Button(self.frame,text="Quit Game",width = 30, command = lambda:self.master.destroy() )
-        self.button4.pack()
-        self.frame.pack()
-
-    def StartGame_window(self):
-        self.StartGame_window = tk.Toplevel(self.master)
-        self.app = StartGame(self.StartGame_window)
-
-    def LeaderBoard_window(self):
-        self.LeaderBoard_window = tk.Toplevel(self.master)
-        self.app = LeaderBoard(self.LeaderBoard_window)
-
-    def ImportQuestion_window(self):
-        self.ImportQuestion_window = tk.Toplevel(self.master)
-        self.app = ImportQuestion(self.ImportQuestion_window)
-
-class StartGame:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("Start Game")
-        self.frame = tk.Frame(self.master)
-        v = StringVar()
-        self.e3 = tk.Entry(self.master,textvariable=v)
-        self.e3.pack()
-        v.set("Player Name")
-        self.mbutton = tk.Button(self.frame,text = "Go!", width =30 , command = self.master.destroy() )
-        self.mbutton.pack()
-        self.frame.pack()
-
-
-class LeaderBoard:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("Leaderboard")
-        self.frame = tk.Frame(self.master)
-        for i in range(0,len(leadboard[0]),1):
-            tk.Label(self.master,text=leadboard[0][i]+"\t"+leadboard[1][i]).pack()
-        self.qbutton = tk.Button(self.frame,text = "Back", width =30 , command = lambda:self.master.destroy() ).pack()
-        self.frame.pack()
-
-class ImportQuestion:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("New Questions")
-        self.frame = tk.Frame(self.master)
-        self.label1 = tk.Label(self.master,text="Question: ")
-        self.label1.pack()
-        self.e1 = tk.Entry(self.master)
-        self.e1.pack()
-        self.label2 = tk.Label(self.master,text="Answer: ")
-        self.label2.pack()
-        self.e2 = tk.Entry(self.master)
-        self.e2.pack()
-        self.qbutton = tk.Button(self.frame,text = "Back", width =30 , command = self.ImportQA2).pack()
-        self.frame.pack()
-
-    def ImportQA2(self):
-        if self.e1.get()=="" or self.e2.get()=="":
-            self.master.destroy()
-        else:
-            qlist.append(self.e1.get())
-            alist.append(self.e2.get())
-            try:
-                with open("questions_answers.txt","w",encoding="ansi") as f:
-                    for i in range(0,len(qlist),1):
-                        f.write(str(qlist[i])+";"+str(alist[i])+";\n")
-            except IOError:
-                print ("Error: can\'t find file questions_answers.txt")
-            
-            self.master.destroy()
-
-readLeadboard()
-readtxt()
-    
-root =tk.Tk()
-app=MainPage(root)
-root.mainloop()
