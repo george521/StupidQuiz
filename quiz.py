@@ -3,6 +3,7 @@ import random
 import tkinter as tk
 from tkinter import *
 
+
 options = "1. Start Quiz","2. LeaderBoard","3. Import new Question","4. Quit Game"
 
 def main():
@@ -37,6 +38,7 @@ leadboard=[[],[]]
 names=[]
 points=[]
 bonus=["Panflo"]
+leadcolours=["gold","white","brown","black","black","black","black","black","black","black"]
 
 
 def stquiz(d):
@@ -156,17 +158,22 @@ def readtxt():
 class MainPage:
     def __init__(self,master):
         self.master = master
-        self.master.title("Main Menu")
+        self.master.title("StupidQuiz")
+        self.master.configure(bg='silver')
+        self.master.resizable(0,0)
         self.frame =tk.Frame(self.master)
-        self.button1 = tk.Button(self.frame,text="Start Game",width = 30, command = self.StartGame_window)
-        self.button1.pack()
-        self.button2 = tk.Button(self.frame,text="Leaderboard",width = 30, command = self.LeaderBoard_window)
-        self.button2.pack()
-        self.button3 = tk.Button(self.frame,text="New Question",width = 30, command = self.ImportQuestion_window)
-        self.button3.pack()
-        self.button4 = tk.Button(self.frame,text="Quit Game",width = 30, command = lambda:self.master.destroy() )
-        self.button4.pack()
-        self.frame.pack()
+        self.Title_label = tk.Label(self.master,text="Main Menu",bg='black',width=30,font=("Times New Romans", 20),fg='violet')
+        self.Title_label.pack(side=TOP,expand=YES)
+        self.button1 = tk.Button(self.frame,text="Start Game",width = 30,height=3,fg='violet', bg='black', command = self.StartGame_window)
+        self.button1.pack(side=TOP, expand=YES)
+        self.button2 = tk.Button(self.frame,text="Leaderboard",width = 30,height=3,fg='violet', bg='black', command = self.LeaderBoard_window)
+        self.button2.pack(side=TOP, expand=YES)
+        self.button3 = tk.Button(self.frame,text="New Question",width = 30,height=3,fg='violet', bg='black', command = self.ImportQuestion_window)
+        self.button3.pack(side=TOP, expand=YES)
+        self.button4 = tk.Button(self.frame,text="Quit Game",width = 30,height=3,fg='violet', bg='black', command = lambda:self.master.destroy() )
+        self.button4.pack(side=TOP, expand=YES)
+        self.frame.pack(expand=YES)
+
 
     def StartGame_window(self):
         self.StartGame_window = tk.Toplevel(self.master)
@@ -186,14 +193,18 @@ t0=0.0
 class StartGame:
     def __init__(self,master):
         self.master = master
-        self.master.title("Start Game")
+        self.master.title("StupidQuiz")
+        self.master.configure(bg='silver')
+        self.master.resizable(0,0)
         self.frame = tk.Frame(self.master)
+        self.name_label = tk.Label(self.master,text="Player Name",bg='black',width=20,font=("Times New Romans", 20),fg='violet')
+        self.name_label.pack()
         self.e3 = tk.Entry(self.master)
         self.e3.pack()
         del plist[:]
         for i in range(0,len(qlist),1):
             plist.append(False)
-        self.mbutton = tk.Button(self.frame,text = "Go!", width =30 , command = self.stquiz1 )
+        self.mbutton = tk.Button(self.frame,text = "Go!", width =10 ,height=2,fg='violet', bg='black',font=("Times New Romans", 10),  command = self.stquiz1 )
         self.mbutton.pack()
         self.frame.pack()
 
@@ -204,12 +215,12 @@ class StartGame:
             
             t0=time.time()
             rand=Randomizer()
-            self.label4 = tk.Label(self.master,text=qlist[rand])
+            self.label4 = tk.Label(self.master,text=qlist[rand],bg='black',font=("Times New Romans", 14),fg='violet')
             self.label4.pack()
             self.answer = tk.Entry(self.master)
             self.answer.pack()
             #this was a button
-            self.fuckingbutton = tk.Checkbutton(self.master, text="Submit", variable=var[k],onvalue=True, offvalue=False)
+            self.fuckingbutton = tk.Checkbutton(self.master, text="Submit", variable=var[k],onvalue=True, offvalue=False,bg='silver')
             self.fuckingbutton.pack()
             self.fuckingbutton.wait_variable(var[k])
             t1=time.time()
@@ -236,30 +247,36 @@ class StartGame:
 class LeaderBoard:
     def __init__(self,master):
         self.master = master
-        self.master.title("Leaderboard")
+        self.master.title("StupidQuiz")
+        self.master.configure(bg='silver')
+        self.master.resizable(0,0)
         self.frame = tk.Frame(self.master)
+        self.lead_label = tk.Label(self.master,text="Leaderboard",bg='black',width=20,font=("Times New Romans", 20),fg='violet')
+        self.lead_label.pack()
         top=len(leadboard[0])if len(leadboard[0])<=10 else 10
         for i in range(0,top,1):
-            self.label1=tk.Label(self.master,text=str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
+            self.label1=tk.Label(self.master,text="\n"+str(i+1)+". "+str(leadboard[0][i])+"\t"+str(leadboard[1][i]),fg=leadcolours[i],bg='silver',font=("Times New Romans", 12))
             self.label1.pack()
-        self.qbutton = tk.Button(self.frame,text = "Back", width =30 , command = lambda:self.master.destroy() )
+        self.qbutton = tk.Button(self.frame,text = "Back", width =20 , fg='violet', bg='black',command = lambda:self.master.destroy() )
         self.qbutton.pack()
         self.frame.pack()
 
 class ImportQuestion:
     def __init__(self,master):
         self.master = master
-        self.master.title("New Questions")
+        self.master.title("StupidQuiz")
+        self.master.configure(bg='silver')
+        self.master.resizable(0,0)
         self.frame = tk.Frame(self.master)
-        self.label2 = tk.Label(self.master,text="Question: ")
+        self.label2 = tk.Label(self.master,text="Question: ",bg='black',width=15,font=("Times New Romans", 14),fg='violet')
         self.label2.pack()
         self.e1 = tk.Entry(self.master)
         self.e1.pack()
-        self.label3 = tk.Label(self.master,text="Answer: ")
+        self.label3 = tk.Label(self.master,text="Answer: ",bg='black',width=15,font=("Times New Romans", 14),fg='violet')
         self.label3.pack()
         self.e2 = tk.Entry(self.master)
         self.e2.pack()
-        self.qbutton2 = tk.Button(self.frame,text = "Back", width =30 , command = self.ImportQA2)
+        self.qbutton2 = tk.Button(self.frame,text = "Back", width =20 ,bg='black',fg='violet', command = self.ImportQA2)
         self.qbutton2.pack()
         self.frame.pack()
         
@@ -282,6 +299,14 @@ readLeadboard()
 readtxt()
     
 root =tk.Tk()
+
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+
+xaxis =(screen_width/2)-(300/2)
+yaxis = (screen_height/2)-(350/2)
+
+root.geometry("300x350+%d+%d"%(xaxis,yaxis))
 #list for the checks on the answers
 app=MainPage(root)
 root.mainloop()
