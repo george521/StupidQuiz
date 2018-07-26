@@ -12,3 +12,6 @@ How to play way 2:
     2. Install python 3.6 on your computer
     3. Open your cmd and locate your downloaded file
     4. Run py quiz.py on cmd and have fun
+
+# Tips
+The first letter of the answer should be a capital letter
