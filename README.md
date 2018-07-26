@@ -4,7 +4,7 @@ A stupid quiz in python 3.6 from a beginner
 How to play way 1:
 
     1. Download Zip
-    2. Doouble click .exe and have fun
+    2. Double click .exe and have fun
 
 How to play way 2:
 
