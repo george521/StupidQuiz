@@ -38,7 +38,6 @@ leadboard=[[],[]]
 names=[]
 points=[]
 bonus=["Panflo"]
-leadcolours=["gold","white","brown","black","black","black","black","black","black","black"]
 
 
 def stquiz(d):
@@ -198,7 +197,7 @@ class StartGame:
         self.master.resizable(0,0)
         self.frame = tk.Frame(self.master)
         self.name_label = tk.Label(self.master,text="Player Name",bg='black',width=20,font=("Times New Romans", 20),fg='violet')
-        self.name_label.pack()
+        self.name_label.pack(fill=X)
         self.e3 = tk.Entry(self.master)
         self.e3.pack()
         del plist[:]
@@ -210,22 +209,32 @@ class StartGame:
 
     def stquiz1(self):
         self.score=0
-        var = [tk.BooleanVar(),tk.BooleanVar(),tk.BooleanVar(),tk.BooleanVar(),tk.BooleanVar()]
-        for k in range (0,5,1):
-            
+        stop_variable = tk.BooleanVar()
+        label_text = StringVar()
+        entry_text = StringVar()
+        t0=time.time()
+        rand=Randomizer()
+        label_text.set(qlist[rand])
+        self.label4 = tk.Label(self.master,textvariable=label_text,bg='black',font=("Times New Romans", 14),fg='violet')
+        self.label4.pack(fill=X)
+        entry_text.set("")
+        self.answer = tk.Entry(self.master,textvariable=entry_text)
+        self.answer.pack()
+        #this was a button
+        self.fuckingbutton = tk.Checkbutton(self.master, text="Submit", variable=stop_variable ,onvalue=True, offvalue=False,bg='silver')
+        self.fuckingbutton.pack()
+        self.fuckingbutton.wait_variable(stop_variable )
+        t1=time.time()
+        self.fuckingbutton.bind(self.stquiz2(rand,t1-t0))
+        for k in range (1,5,1):     
             t0=time.time()
             rand=Randomizer()
-            self.label4 = tk.Label(self.master,text=qlist[rand],bg='black',font=("Times New Romans", 14),fg='violet')
-            self.label4.pack()
-            self.answer = tk.Entry(self.master)
-            self.answer.pack()
-            #this was a button
-            self.fuckingbutton = tk.Checkbutton(self.master, text="Submit", variable=var[k],onvalue=True, offvalue=False,bg='silver')
-            self.fuckingbutton.pack()
-            self.fuckingbutton.wait_variable(var[k])
+            label_text.set(qlist[rand])
+            entry_text.set("")
+            stop_variable.set(False)
+            self.fuckingbutton.wait_variable(stop_variable )
             t1=time.time()
-            self.fuckingbutton.bind(self.stquiz2(rand,t1-t0))
-            
+            self.fuckingbutton.bind(self.stquiz2(rand,t1-t0))        
             
         leadboard[0].append(self.e3.get())
         leadboard[1].append(self.score)
@@ -255,8 +264,8 @@ class LeaderBoard:
         self.lead_label.pack()
         top=len(leadboard[0])if len(leadboard[0])<=10 else 10
         for i in range(0,top,1):
-            self.label1=tk.Label(self.master,text="\n"+str(i+1)+". "+str(leadboard[0][i])+"\t"+str(leadboard[1][i]),fg=leadcolours[i],bg='silver',font=("Times New Romans", 12))
-            self.label1.pack()
+            self.label1=tk.Label(self.master,text="\n"+str(i+1)+". "+str(leadboard[0][i])+"\t"+str(leadboard[1][i]),fg='black',bg='silver',font=("Times New Romans", 12))
+            self.label1.pack(fill=X)
         self.qbutton = tk.Button(self.frame,text = "Back", width =20 , fg='violet', bg='black',command = lambda:self.master.destroy() )
         self.qbutton.pack()
         self.frame.pack()
