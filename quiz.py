@@ -153,6 +153,8 @@ def readtxt():
     except IOError:
         print ("Error: can\'t find file questions_answers.txt")
 
+troll=0
+troll_list=["Good job Stupid","Did you just clicked again?","Really m8?","Aren't you bored of this?","I am certainly not","I hope you don't disappoint me","Keep trying","Better luck next time","Are you mad bro?","Ok I am done","Did you believe me?","OK now I am done","Or so I thought","I am sorry fred","but","all good things come to an end","Your reward for clicking this much","is Panflo"]
 
 class MainPage:
     def __init__(self,master):
@@ -198,16 +200,21 @@ class StartGame:
         self.frame = tk.Frame(self.master)
         self.name_label = tk.Label(self.master,text="Player Name",bg='black',width=20,font=("Times New Romans", 20),fg='violet')
         self.name_label.pack(fill=X)
-        self.e3 = tk.Entry(self.master)
+        name_text=StringVar()
+        name_text.set("")
+        self.e3 = tk.Entry(self.master,textvariable=name_text)
         self.e3.pack()
         del plist[:]
         for i in range(0,len(qlist),1):
             plist.append(False)
-        self.mbutton = tk.Button(self.frame,text = "Go!", width =10 ,height=2,fg='violet', bg='black',font=("Times New Romans", 10),  command = self.stquiz1 )
-        self.mbutton.pack()
+        self.mbutton = tk.Button(self.frame,text = "Go!", width =10 ,height=2,fg='violet', bg='black',font=("Times New Romans", 10),  command = lambda:self.stquiz1(name_text.get()) )
+        self.mbutton.pack(fill=X)
         self.frame.pack()
 
-    def stquiz1(self):
+    def stquiz1(self,name_text):
+        self.name_label.destroy()
+        self.e3.destroy()
+        self.mbutton.configure(text="Click if you are Stupid",width=20,height=1,font=("Times New Romans", 20),command=lambda:self.nothing(troll))
         self.score=0
         stop_variable = tk.BooleanVar()
         label_text = StringVar()
@@ -216,7 +223,7 @@ class StartGame:
         rand=Randomizer()
         label_text.set(qlist[rand])
         self.label4 = tk.Label(self.master,textvariable=label_text,bg='black',font=("Times New Romans", 14),fg='violet')
-        self.label4.pack(fill=X)
+        self.label4.pack(fill=X,pady=15)
         entry_text.set("")
         self.answer = tk.Entry(self.master,textvariable=entry_text)
         self.answer.pack()
@@ -236,7 +243,7 @@ class StartGame:
             t1=time.time()
             self.fuckingbutton.bind(self.stquiz2(rand,t1-t0))        
             
-        leadboard[0].append(self.e3.get())
+        leadboard[0].append(name_text)
         leadboard[1].append(self.score)
         quicksort(leadboard,0,len(leadboard[0])-1)    
         leadboard[0].reverse()
@@ -252,6 +259,12 @@ class StartGame:
         elif str(self.answer.get())==bonus[0]:
             self.score = self.score + 10000
 
+    def nothing(self,troll):
+        try:
+            self.mbutton.configure(width=30,text=troll_list[troll],command=lambda:self.nothing(troll+1))
+        except IndexError:
+            self.mbutton.configure(width=30,text=troll_list[len(troll_list)-1],command=lambda:self.nothing(len(troll_list)-1))
+        
 
 class LeaderBoard:
     def __init__(self,master):
