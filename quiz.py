@@ -1,35 +1,8 @@
+import tkinter as tk            
+from tkinter import *
 import time
 import random
-import tkinter as tk
-from tkinter import *
 
-
-options = "1. Start Quiz","2. LeaderBoard","3. Import new Question","4. Quit Game"
-
-def main():
-    #main menu
-    readtxt()
-    readLeadboard()
-    while True:
-        for i in options:
-            print(i)
-        x=input()
-        if x=="1":
-            del plist[:]
-            for i in range(0,len(qlist),1):
-                plist.append(False)
-            d=input("Name: ")
-            stquiz(d)
-        elif x=="2":
-            leaderb()
-        elif x=="3":
-            qg=input("Give your question:\t")
-            ag=input("Give the answer to the question:\t")
-            ImportQA(qg,ag)
-        elif x=="4":
-            exit()
-        else:
-            print("Invalid choice")
 #global variables
 plist = []
 qlist = []
@@ -38,39 +11,6 @@ leadboard=[[],[]]
 names=[]
 points=[]
 bonus=["Panflo"]
-
-
-def stquiz(d):
-    score=0
-    for k in range (0,5,1):
-        t0=time.time()
-        rand=Randomizer()
-        print("Question: "+ qlist[rand])
-        answer=input("\nWrite your answer: ")
-        print("\n")
-        t1=time.time()
-        #Checking if answer is correct and 1 minute has not passed
-        if str(answer)==alist[rand] and t1-t0<60.0:
-            score = score + 10
-        elif str(answer)==bonus[0]:
-            score = score + 10000
-        else:
-            continue
-    leadboard[0].append(d)
-    leadboard[1].append(score)
-    quicksort(leadboard,0,len(leadboard[0])-1)    
-    leadboard[0].reverse()
-    leadboard[1].reverse()
-    saveFile()
-
-    
-def leaderb():
-    
-    #printing the top 10 players or less if not 10
-    top=len(leadboard[0])if len(leadboard[0])<=10 else 10
-    for i in range(0,top,1):
-        print(str(leadboard[0][i])+"\t"+str(leadboard[1][i]))
-    print("\n")
 
 def quicksort(a,ls,rs):
     #Simple quicksort for a 2D list
@@ -105,17 +45,6 @@ def Randomizer():
         if plist[a]==False:
             plist[a]=True
             return a    
-
-#Function for importing new questions
-def ImportQA(question,answer):
-    qlist.append(question)
-    alist.append(answer)
-    try:
-        with open("questions_answers.txt","w",encoding="ansi") as f:
-            for i in range(0,len(qlist),1):
-                f.write(str(qlist[i])+";"+str(alist[i])+";\n")
-    except IOError:
-        print ("Error: can\'t find file questions_answers.txt")
 
     
 #Saving into LeaderBoard.txt            
@@ -155,84 +84,120 @@ def readtxt():
 
 troll=0
 troll_list=["Good job Stupid","Did you just clicked again?","Really m8?","Aren't you bored of this?","I am certainly not","I hope you don't disappoint me","Keep trying","Better luck next time","Are you mad bro?","Ok I am done","Did you believe me?","OK now I am done","Or so I thought","I am sorry fred","but","all good things come to an end","Your reward for clicking this much","is Panflo"]
-
-class MainPage:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("StupidQuiz")
-        self.master.configure(bg='silver')
-        self.master.resizable(0,0)
-        self.frame =tk.Frame(self.master)
-        self.Title_label = tk.Label(self.master,text="Main Menu",bg='black',width=30,font=("Times New Romans", 20),fg='violet')
-        self.Title_label.pack(side=TOP,expand=YES)
-        self.button1 = tk.Button(self.frame,text="Start Game",width = 30,height=3,fg='violet', bg='black', command = self.StartGame_window)
-        self.button1.pack(side=TOP, expand=YES)
-        self.button2 = tk.Button(self.frame,text="Leaderboard",width = 30,height=3,fg='violet', bg='black', command = self.LeaderBoard_window)
-        self.button2.pack(side=TOP, expand=YES)
-        self.button3 = tk.Button(self.frame,text="New Question",width = 30,height=3,fg='violet', bg='black', command = self.ImportQuestion_window)
-        self.button3.pack(side=TOP, expand=YES)
-        self.button4 = tk.Button(self.frame,text="Quit Game",width = 30,height=3,fg='violet', bg='black', command = lambda:self.master.destroy() )
-        self.button4.pack(side=TOP, expand=YES)
-        self.frame.pack(expand=YES)
-
-
-    def StartGame_window(self):
-        self.StartGame_window = tk.Toplevel(self.master)
-        self.app = StartGame(self.StartGame_window)
-    def LeaderBoard_window(self):
-        self.LeaderBoard_window = tk.Toplevel(self.master)
-        self.app = LeaderBoard(self.LeaderBoard_window)
-
-    def ImportQuestion_window(self):
-        self.ImportQuestion_window = tk.Toplevel(self.master)
-        self.app = ImportQuestion(self.ImportQuestion_window)
-
 #initialize t1,t0        
 t1=0.0
 t0=0.0
 
-class StartGame:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("StupidQuiz")
-        self.master.configure(bg='silver')
-        self.master.resizable(0,0)
-        self.frame = tk.Frame(self.master)
-        self.name_label = tk.Label(self.master,text="Player Name",bg='black',width=20,font=("Times New Romans", 20),fg='violet')
-        self.name_label.pack(fill=X)
-        name_text=StringVar()
-        name_text.set("")
-        self.e3 = tk.Entry(self.master,textvariable=name_text)
-        self.e3.pack()
+
+class MainWindow(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
+        self.title("StupidQuiz") 
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+
+        xaxis =(screen_width/2)-(300/2)
+        yaxis = (screen_height/2)-(350/2)
+        self.geometry("+%d+%d"%(xaxis,yaxis)) # make the window appear in the center of the screen
+
+ 
+        # this container contains all the pages
+        global container
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)   
+        container.grid_columnconfigure(0,weight=1) 
+        self.frames = {} # dictionary to keep the pages
+ 
+        for F in (StartPage, StartGame,LeaderBoard,ImportQuestion): 
+            frame = F(container, self) # create the page
+            self.frames[F] = frame  
+            frame.grid(row=0, column=0, sticky="nsew") 
+ 
+        self.show_frame(StartPage) # setting StartPage as first page
+
+    #showing the named frame
+    def show_frame(self, name):
+        frame = self.frames[name]
+        frame.tkraise()
+
+    #destroying the named frame
+    def destroy_frame(self,name):
+        
+        frame = self.frames[name]
+        frame.grid_forget()
+        frame.destroy()
+    #recreating the named frame
+    def add_frame(self,name):
         del plist[:]
         for i in range(0,len(qlist),1):
             plist.append(False)
-        self.mbutton = tk.Button(self.frame,text = "Go!", width =10 ,height=2,fg='violet', bg='black',font=("Times New Romans", 10),  command = lambda:self.stquiz1(name_text.get()) )
-        self.mbutton.pack(fill=X)
-        self.frame.pack()
+        frame = name(container,self)
+        self.frames[name]=frame
+        frame.grid(row=0, column=0, sticky="nsew")
 
-    def stquiz1(self,name_text):
+
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.configure(bg="silver")
+        label = tk.Label(self, text="Main Menu",bg="black",fg="violet",font=("Times New Roman",30))
+        label.pack(side="top", fill="x", pady=20)
+
+        button1 = tk.Button(self, text="StartGame",bg="black",fg="violet",width = 30,height=3, command=lambda: controller.show_frame(StartGame))
+        button2 = tk.Button(self, text="Leaderboard",bg="black",fg="violet", width = 30,height=3,command=lambda: controller.show_frame(LeaderBoard))
+        button3 = tk.Button(self, text="New Question",bg="black",fg="violet", width = 30,height=3,command=lambda: controller.show_frame(ImportQuestion))
+        button4 = tk.Button(self, text="Quit Game",bg="black",fg="violet",width = 30,height=3, command=lambda: controller.destroy())
+        
+        button1.pack()
+        button2.pack(pady=10)
+        button3.pack()
+        button4.pack(pady=10)
+
+
+class StartGame(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.configure(bg="silver")
+        self.name_label = tk.Label(self,text="Player Name",bg='black',width=20,font=("Times New Roman", 20),fg='violet')
+        self.name_label.pack(pady=20)
+        name_text = tk.StringVar()
+        name_text.set("")
+        self.Player_name = tk.Entry(self,textvariable=name_text)
+        self.Player_name.pack()
+        del plist[:]
+        for i in range(0,len(qlist),1):
+            plist.append(False)
+        self.cheatbutton = tk.Button(self,text = "Go!", width =10 ,height=2,fg='violet', bg='black',font=("Times New Roman", 10),  command = lambda:self.gameplay(name_text.get(),controller) )
+        self.cheatbutton.pack(pady=20)
+        
+
+    def gameplay(self,name_text,controller):
         self.name_label.destroy()
-        self.e3.destroy()
-        self.mbutton.configure(text="Click if you are Stupid",width=20,height=1,font=("Times New Romans", 20),command=lambda:self.nothing(troll))
+        self.Player_name.destroy()
+        if name_text=="":
+            name_text="Player"
+        self.cheatbutton.configure(text="Click if you are Stupid",width=20,height=1,font=("Times New Roman", 20),command=lambda:self.Cheats(troll))
         self.score=0
         stop_variable = tk.BooleanVar()
-        label_text = StringVar()
-        entry_text = StringVar()
+        label_text = tk.StringVar()
+        entry_text = tk.StringVar()
         t0=time.time()
         rand=Randomizer()
         label_text.set(qlist[rand])
-        self.label4 = tk.Label(self.master,textvariable=label_text,bg='black',font=("Times New Romans", 14),fg='violet')
-        self.label4.pack(fill=X,pady=15)
+        self.questionlabel = tk.Label(self,textvariable=label_text,bg='black',font=("Times New Roman", 16),fg='violet')
+        self.questionlabel.pack()
         entry_text.set("")
-        self.answer = tk.Entry(self.master,textvariable=entry_text)
-        self.answer.pack()
-        #this was a button
-        self.fuckingbutton = tk.Checkbutton(self.master, text="Submit", variable=stop_variable ,onvalue=True, offvalue=False,bg='silver')
+        self.answer = tk.Entry(self,textvariable=entry_text)
+        self.answer.pack(pady=20)
+        #submit checkbutton
+        self.fuckingbutton = tk.Checkbutton(self, text="Submit", variable=stop_variable ,onvalue=True, offvalue=False,bg='black',fg='violet',font=("Times New Roman", 14))
         self.fuckingbutton.pack()
         self.fuckingbutton.wait_variable(stop_variable )
         t1=time.time()
-        self.fuckingbutton.bind(self.stquiz2(rand,t1-t0))
+        self.fuckingbutton.bind(self.PointsCalculator(rand,t1-t0)) #wait to submit the answer
         for k in range (1,5,1):     
             t0=time.time()
             rand=Randomizer()
@@ -241,7 +206,7 @@ class StartGame:
             stop_variable.set(False)
             self.fuckingbutton.wait_variable(stop_variable )
             t1=time.time()
-            self.fuckingbutton.bind(self.stquiz2(rand,t1-t0))        
+            self.fuckingbutton.bind(self.PointsCalculator(rand,t1-t0))        
             
         leadboard[0].append(name_text)
         leadboard[1].append(self.score)
@@ -249,62 +214,65 @@ class StartGame:
         leadboard[0].reverse()
         leadboard[1].reverse()
         saveFile()
-        self.master.destroy()
-        
 
-    def stquiz2(self,rand,time):
+        controller.destroy_frame(StartGame)
+        controller.add_frame(StartGame)
+        controller.destroy_frame(LeaderBoard)
+        controller.add_frame(LeaderBoard)
+        controller.show_frame(StartPage)
+              
+
+    def PointsCalculator(self,rand,time):
         #Checking if answer is correct and 1 minute has not passed
         if str(self.answer.get())==alist[rand] and time<60.0:
             self.score = self.score + 10
         elif str(self.answer.get())==bonus[0]:
             self.score = self.score + 10000
 
-    def nothing(self,troll):
+    def Cheats(self,troll):
         try:
-            self.mbutton.configure(width=30,text=troll_list[troll],command=lambda:self.nothing(troll+1))
+            self.cheatbutton.configure(width=30,text=troll_list[troll],command=lambda:self.Cheats(troll+1))
         except IndexError:
-            self.mbutton.configure(width=30,text=troll_list[len(troll_list)-1],command=lambda:self.nothing(len(troll_list)-1))
+            self.cheatbutton.configure(width=30,text=troll_list[len(troll_list)-1],command=lambda:self.Cheats(len(troll_list)-1))
         
 
-class LeaderBoard:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("StupidQuiz")
-        self.master.configure(bg='silver')
-        self.master.resizable(0,0)
-        self.frame = tk.Frame(self.master)
-        self.lead_label = tk.Label(self.master,text="Leaderboard",bg='black',width=20,font=("Times New Romans", 20),fg='violet')
+class LeaderBoard(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.configure(bg="silver")
+        self.lead_label = tk.Label(self,text="Leaderboard",bg='black',width=20,font=("Times New Roman", 20),fg='violet')
         self.lead_label.pack()
         top=len(leadboard[0])if len(leadboard[0])<=10 else 10
         for i in range(0,top,1):
-            self.label1=tk.Label(self.master,text="\n"+str(i+1)+". "+str(leadboard[0][i])+"\t"+str(leadboard[1][i]),fg='black',bg='silver',font=("Times New Romans", 12))
-            self.label1.pack(fill=X)
-        self.qbutton = tk.Button(self.frame,text = "Back", width =20 , fg='violet', bg='black',command = lambda:self.master.destroy() )
-        self.qbutton.pack()
-        self.frame.pack()
-
-class ImportQuestion:
-    def __init__(self,master):
-        self.master = master
-        self.master.title("StupidQuiz")
-        self.master.configure(bg='silver')
-        self.master.resizable(0,0)
-        self.frame = tk.Frame(self.master)
-        self.label2 = tk.Label(self.master,text="Question: ",bg='black',width=15,font=("Times New Romans", 14),fg='violet')
-        self.label2.pack()
-        self.e1 = tk.Entry(self.master)
-        self.e1.pack()
-        self.label3 = tk.Label(self.master,text="Answer: ",bg='black',width=15,font=("Times New Romans", 14),fg='violet')
-        self.label3.pack()
-        self.e2 = tk.Entry(self.master)
-        self.e2.pack()
-        self.qbutton2 = tk.Button(self.frame,text = "Back", width =20 ,bg='black',fg='violet', command = self.ImportQA2)
-        self.qbutton2.pack()
-        self.frame.pack()
+            self.playerranking=tk.Label(self,text="\n"+str(i+1)+". "+str(leadboard[0][i])+"\t"+str(leadboard[1][i]),fg='black',bg='silver',font=("Times New Romans", 12))
+            self.playerranking.pack()
         
-    def ImportQA2(self):
+        self.returnbutton = tk.Button(self,text = "Back", width =10,font=("Times New Roman", 14) , fg='violet', bg='black',command = lambda:controller.show_frame(StartPage) )
+        self.returnbutton.pack(pady=10,side="bottom")
+
+
+class ImportQuestion(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.configure(bg="silver")
+        self.writtenquestion = tk.Label(self,text="Question: ",bg='black',width=15,font=("Times New Roman", 20),fg='violet')
+        self.writtenquestion.pack(fill="x",pady=20)
+        self.e1 = tk.Entry(self)
+        self.e1.pack(padx=20, fill="x")
+        self.writtenanswer = tk.Label(self,text="Answer: ",bg='black',width=15,font=("Times New Roman", 20),fg='violet')
+        self.writtenanswer.pack(fill="x",pady=20)
+        self.e2 = tk.Entry(self)
+        self.e2.pack(padx=20, fill="x")
+        self.returnbutton2 = tk.Button(self,text = "Back", width =10,font=("Times New Roman", 14) ,bg='black',fg='violet', command = lambda:self.UpdateQuestions(controller))
+        self.returnbutton2.pack(pady=10,side="bottom")
+
+    def UpdateQuestions(self,controller):
         if self.e1.get()=="" or self.e2.get()=="":
-            self.master.destroy()
+            controller.destroy_frame(ImportQuestion)
+            controller.add_frame(ImportQuestion)
+            controller.show_frame(StartPage)
         else:
             qlist.append(self.e1.get())
             alist.append(self.e2.get())
@@ -314,21 +282,12 @@ class ImportQuestion:
                         f.write(str(qlist[i])+";"+str(alist[i])+";\n")
             except IOError:
                 print ("Error: can\'t find file questions_answers.txt")
-            
-            self.master.destroy()
+            controller.destroy_frame(ImportQuestion)
+            controller.add_frame(ImportQuestion)
+            controller.show_frame(StartPage)
 
-readLeadboard()
-readtxt()
-    
-root =tk.Tk()
-
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
-
-xaxis =(screen_width/2)-(300/2)
-yaxis = (screen_height/2)-(350/2)
-
-root.geometry("300x350+%d+%d"%(xaxis,yaxis))
-#list for the checks on the answers
-app=MainPage(root)
-root.mainloop()
+if __name__ == "__main__":
+    readLeadboard()
+    readtxt()    
+    app = MainWindow()
+    app.mainloop()
